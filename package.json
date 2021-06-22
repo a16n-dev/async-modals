@@ -2,7 +2,7 @@
   "name": "@async-modals/monorepo",
   "private": true,
   "version": "1.0.0",
-  "description": "e",
+  "description": "React library for showing modal windows using hooks and promises ",
   "author": "Alexander Nicholson",
   "license": "MIT",
   "repository": {
