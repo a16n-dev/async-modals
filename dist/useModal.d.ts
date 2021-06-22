@@ -16,6 +16,6 @@ interface options<T> {
     canClose?: boolean;
 }
 export declare const useModal: <req, res>(modal: ComponentType<Modal<req, res>>) => {
-    show: (options?: options<req>) => Promise<res>;
+    show: (options?: options<req>) => Promise<res | undefined>;
 };
 export {};
