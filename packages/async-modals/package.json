@@ -1,6 +1,6 @@
 {
   "name": "async-modals",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "display modals without cluttering up components",
   "main": "dist/async-modals.cjs.js",
   "module": "dist/async-modals.esm.js",

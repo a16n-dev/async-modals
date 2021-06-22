@@ -1,4 +1,4 @@
-import { ComponentType } from 'react';
+import React, { ComponentType } from 'react';
 export interface ModalObject<res = any, req = any> {
     resolve: (value: res) => void;
     reject: (reason?: any) => void;
@@ -19,6 +19,6 @@ export interface ModalProviderProps {
     backgroundClassName?: string;
     backgroundId?: string;
 }
-export declare const ModalContext: import("react").Context<contextState>;
+export declare const ModalContext: React.Context<contextState>;
 export declare const ModalProvider: React.FC<ModalProviderProps>;
 export {};

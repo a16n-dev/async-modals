@@ -1,4 +1,4 @@
-import { ComponentType, createContext, useState } from 'react';
+import React, { ComponentType, createContext, useState } from 'react';
 
 export interface ModalObject<res = any, req = any> {
   resolve: (value: res) => void;

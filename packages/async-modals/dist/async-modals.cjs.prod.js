@@ -2,7 +2,11 @@
 
 Object.defineProperty(exports, '__esModule', { value: true });
 
-var react = require('react');
+var React = require('react');
+
+function _interopDefault (e) { return e && e.__esModule ? e : { 'default': e }; }
+
+var React__default = /*#__PURE__*/_interopDefault(React);
 
 function _arrayWithHoles(arr) {
   if (Array.isArray(arr)) return arr;
@@ -60,12 +64,12 @@ function _slicedToArray(arr, i) {
   return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest();
 }
 
-var ModalContext = /*#__PURE__*/react.createContext({
+var ModalContext = /*#__PURE__*/React.createContext({
   setModal: function setModal() {}
 });
-var ChildWrapper = React.memo(function (_ref) {
+var ChildWrapper = /*#__PURE__*/React__default['default'].memo(function (_ref) {
   var children = _ref.children;
-  return /*#__PURE__*/React.createElement(React.Fragment, null, children);
+  return /*#__PURE__*/React__default['default'].createElement(React__default['default'].Fragment, null, children);
 });
 var ModalProvider = function ModalProvider(_ref2) {
   var children = _ref2.children,
@@ -74,12 +78,12 @@ var ModalProvider = function ModalProvider(_ref2) {
       _ref2$backgroundId = _ref2.backgroundId,
       backgroundId = _ref2$backgroundId === void 0 ? 'modal-back' : _ref2$backgroundId;
 
-  var _useState = react.useState(),
+  var _useState = React.useState(),
       _useState2 = _slicedToArray(_useState, 2),
       modal = _useState2[0],
       _setModal = _useState2[1];
 
-  var _useState3 = react.useState(''),
+  var _useState3 = React.useState(''),
       _useState4 = _slicedToArray(_useState3, 2),
       bgClassName = _useState4[0],
       setBgClassName = _useState4[1];
@@ -93,9 +97,9 @@ var ModalProvider = function ModalProvider(_ref2) {
       setBgClassName(backgroundClassName);
     }
   };
-  return /*#__PURE__*/React.createElement(ModalContext.Provider, {
+  return /*#__PURE__*/React__default['default'].createElement(ModalContext.Provider, {
     value: ctx
-  }, /*#__PURE__*/React.createElement(ChildWrapper, null, children), modal && /*#__PURE__*/React.createElement("div", {
+  }, /*#__PURE__*/React__default['default'].createElement(ChildWrapper, null, children), modal && /*#__PURE__*/React__default['default'].createElement("div", {
     className: backgroundClassName + ' ' + bgClassName,
     id: backgroundId,
     onMouseDown: function onMouseDown(e) {
@@ -107,7 +111,7 @@ var ModalProvider = function ModalProvider(_ref2) {
         _setModal(undefined);
       }
     }
-  }, /*#__PURE__*/React.createElement(modal.component, {
+  }, /*#__PURE__*/React__default['default'].createElement(modal.component, {
     data: modal.data,
     submit: function submit(data) {
       modal.resolve(data);
@@ -159,7 +163,7 @@ function _asyncToGenerator(fn) {
 }
 
 var useModal = function useModal(modal) {
-  var _useContext = react.useContext(ModalContext),
+  var _useContext = React.useContext(ModalContext),
       setModal = _useContext.setModal;
 
   return {

@@ -5,15 +5,17 @@
     "jsx": "preserve",
     "noUnusedLocals": true,
     "noUnusedParameters": true,
-    // "declaration": true,
+    "declaration": true,
     "preserveConstEnums": true,
     // "sourceMap": true,
+    "esModuleInterop": true,
     "skipLibCheck": true,
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
     "noImplicitAny": false,
+
     // "outDir": "dist/",
-    // "lib": ["dom", "dom.iterable", "esnext"]
+    "lib": ["dom", "dom.iterable", "esnext"]
   },
   "include": ["src"],
   "exclude": ["node_modules", "dist"]

@@ -1,4 +1,4 @@
-import { createContext, useState, useContext } from 'react';
+import React, { createContext, useState, useContext } from 'react';
 
 function _arrayWithHoles(arr) {
   if (Array.isArray(arr)) return arr;
@@ -59,7 +59,7 @@ function _slicedToArray(arr, i) {
 var ModalContext = /*#__PURE__*/createContext({
   setModal: function setModal() {}
 });
-var ChildWrapper = React.memo(function (_ref) {
+var ChildWrapper = /*#__PURE__*/React.memo(function (_ref) {
   var children = _ref.children;
   return /*#__PURE__*/React.createElement(React.Fragment, null, children);
 });
