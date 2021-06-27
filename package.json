@@ -1,6 +1,6 @@
 {
   "name": "async-modals",
-  "version": "0.3.13",
+  "version": "0.3.14",
   "main": "dist/index.js",
   "repository": {
     "type": "git",
@@ -26,7 +26,8 @@
   },
   "scripts": {
     "build": "rollup -c",
-    "start": "rollup -c -w"
+    "start": "rollup -c -w",
+    "release": "yarn build && yarn publish"
   },
   "files": [
     "dist"
