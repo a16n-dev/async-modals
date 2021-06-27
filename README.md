@@ -30,7 +30,6 @@ const App: React.FC = () => {
 import React from 'react';
 import {Modal} from 'async-modals'
 
-import ''
 const MyModal: React.FC<Modal<{name: string}, void>> = ({data, submit}) => {
   return (
     <div>
@@ -48,13 +47,13 @@ import {useModal} from 'async-modals'
 import MyModal from './MyModal'
 
 
-const App: React.FC = () => {
+const Page: React.FC = () => {
 
-  const {show} = useModal(MyModal);
+  const modal = useModal(MyModal);
 
   const handleClick = async () => {
     //show the modal to the user
-    await show({
+    await modal.show({
       data: {
         name: 'Bob'
       }
