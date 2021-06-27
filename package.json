@@ -1,7 +1,11 @@
 {
   "name": "async-modals",
-  "version": "0.3.2",
+  "version": "0.3.12",
   "main": "dist/index.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/alexn400/async-modals.git"
+  },
   "license": "MIT",
   "devDependencies": {
     "@types/react": "^17.0.11",
@@ -11,6 +15,8 @@
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
     "rollup": "^2.52.2",
+    "rollup-plugin-css-only": "^3.1.0",
+    "rollup-plugin-sass": "^1.2.2",
     "rollup-plugin-typescript2": "^0.30.0",
     "typescript": "^4.3.4"
   },
@@ -24,5 +30,6 @@
   },
   "files": [
     "dist"
-  ]
+  ],
+  "dependencies": {}
 }
