@@ -16,7 +16,7 @@ export default {
       }
     ],
     plugins: [
-      typescript({ })
+      typescript({ rollupCommonJSResolveHack: true })
     ],
     external: ['react', 'react-dom']
   }
