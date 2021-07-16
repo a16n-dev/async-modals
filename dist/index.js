@@ -168,23 +168,27 @@ function useModal(modalComponent, modalOptions) {
     var _this = this;
     if (modalOptions === void 0) { modalOptions = {}; }
     var _a = React.useContext(ModalContext), setModal = _a.setModal, closeModal = _a.closeModal;
-    return {
-        show: function (component, options) {
-            if (options === void 0) { options = modalOptions; }
-            return __awaiter(_this, void 0, void 0, function () {
-                return __generator(this, function (_a) {
-                    return [2 /*return*/, new Promise(function (resolve, reject) {
-                            var obj = {
-                                resolve: resolve,
-                                reject: reject,
-                                data: options.data,
-                                component: component || modalComponent,
-                                canClose: Boolean(options.canClose),
-                            };
-                            setModal(obj);
-                        })];
-                });
+    var show = function (component) { return function (options) {
+        if (options === void 0) { options = modalOptions; }
+        return __awaiter(_this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                return [2 /*return*/, new Promise(function (resolve, reject) {
+                        var obj = {
+                            resolve: resolve,
+                            reject: reject,
+                            data: options.data,
+                            component: component,
+                            canClose: Boolean(options.canClose),
+                        };
+                        setModal(obj);
+                    })];
             });
+        });
+    }; };
+    return {
+        show: modalComponent ? show(modalComponent) : function (component, options) {
+            if (options === void 0) { options = modalOptions; }
+            return show(component)(options);
         },
         close: function () { return closeModal(); }
     };

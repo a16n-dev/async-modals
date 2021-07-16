@@ -16,11 +16,6 @@ interface settings {
    * By default this is set to true
    */
    canClose?: boolean;
-   /**
-    * Add a delay between when the modal is closed and when it is removed from the component tree.
-    * Use this to add an close animation to the modal 
-    */
-   unRenderDelay?: number;
 }
 
 // Overloads
@@ -36,18 +31,20 @@ export function useModal<Data,Response>(modalComponent: ComponentType<Modal<Data
 export function useModal<Data,Response>(modalComponent?: ComponentType<Modal<Data, Response>>, modalOptions: options<Data> = {}): any {
   const { setModal, closeModal } = useContext(ModalContext);
 
+  const show = (component: ComponentType<Modal<Data, Response>>) => async ( options: options<Data> = modalOptions): Promise<Response | undefined> =>
+  new Promise((resolve, reject) => {
+    const obj: ModalObject<Data, Response> = {
+      resolve,
+      reject,
+      data: options.data,
+      component,
+      canClose: Boolean(options.canClose),
+    };
+    setModal(obj);
+  })
+
   return {
-    show: async (component: ComponentType<Modal<Data, Response>>, options: options<Data> = modalOptions): Promise<Response | undefined> =>
-    new Promise((resolve, reject) => {
-      const obj: ModalObject<Data, Response> = {
-        resolve,
-        reject,
-        data: options.data,
-        component: component || modalComponent,
-        canClose: Boolean(options.canClose),
-      };
-      setModal(obj);
-    }), 
+    show: modalComponent ? show(modalComponent) : (component: ComponentType<Modal<Data, Response>>, options: options<Data> = modalOptions) => show(component)(options),
     close: () => closeModal()
   };
 };
