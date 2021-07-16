@@ -3,62 +3,26 @@ Object.defineProperty(exports, '__esModule', { value: true });
 var React = require('react');
 
 function _interopNamespace(e) {
-  if (e && e.__esModule) return e;
-  var n = Object.create(null);
-  if (e) {
-    Object.keys(e).forEach(function (k) {
-      if (k !== 'default') {
-        var d = Object.getOwnPropertyDescriptor(e, k);
-        Object.defineProperty(n, k, d.get ? d : {
-          enumerable: true,
-          get: function () {
-            return e[k];
-          }
+    if (e && e.__esModule) return e;
+    var n = Object.create(null);
+    if (e) {
+        Object.keys(e).forEach(function (k) {
+            if (k !== 'default') {
+                var d = Object.getOwnPropertyDescriptor(e, k);
+                Object.defineProperty(n, k, d.get ? d : {
+                    enumerable: true,
+                    get: function () {
+                        return e[k];
+                    }
+                });
+            }
         });
-      }
-    });
-  }
-  n['default'] = e;
-  return Object.freeze(n);
+    }
+    n['default'] = e;
+    return Object.freeze(n);
 }
 
 var React__namespace = /*#__PURE__*/_interopNamespace(React);
-
-var ModalContext = React.createContext({
-    setModal: function () { },
-});
-var ChildWrapper = React__namespace.memo(function (_a) {
-    var children = _a.children;
-    return React__namespace.createElement(React__namespace.Fragment, null, children);
-});
-var ModalProvider = function (_a) {
-    var children = _a.children, _b = _a.backgroundClassName, backgroundClassName = _b === void 0 ? 'async-modals__background' : _b, _c = _a.backgroundId, backgroundId = _c === void 0 ? 'modal-back' : _c;
-    var _d = React.useState(), modal = _d[0], setModal = _d[1];
-    var _e = React.useState(''), bgClassName = _e[0], setBgClassName = _e[1];
-    var ctx = {
-        setModal: function (obj, backgroundClassName) {
-            if (backgroundClassName === void 0) { backgroundClassName = ''; }
-            setModal(obj);
-            setBgClassName(backgroundClassName);
-        },
-    };
-    return (React__namespace.createElement(ModalContext.Provider, { value: ctx },
-        React__namespace.createElement(ChildWrapper, null, children),
-        modal && (React__namespace.createElement("div", { className: backgroundClassName + ' ' + bgClassName, id: backgroundId, onMouseDown: function (e) {
-                var _a;
-                if (modal.canClose && ((_a = e.target) === null || _a === void 0 ? void 0 : _a.id) === backgroundId) {
-                    modal.resolve(undefined);
-                    setModal(undefined);
-                }
-            } },
-            React__namespace.createElement(modal.component, { data: modal.data, submit: function (data) {
-                    modal.resolve(data);
-                    setModal(undefined);
-                }, cancel: function () {
-                    modal.resolve(undefined);
-                    setModal(undefined);
-                } })))));
-};
 
 /*! *****************************************************************************
 Copyright (c) Microsoft Corporation.
@@ -74,6 +38,17 @@ LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR
 OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR
 PERFORMANCE OF THIS SOFTWARE.
 ***************************************************************************** */
+
+var __assign = function() {
+    __assign = Object.assign || function __assign(t) {
+        for (var s, i = 1, n = arguments.length; i < n; i++) {
+            s = arguments[i];
+            for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p)) t[p] = s[p];
+        }
+        return t;
+    };
+    return __assign.apply(this, arguments);
+};
 
 function __awaiter(thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
@@ -113,28 +88,100 @@ function __generator(thisArg, body) {
     }
 }
 
-var useModal = function (modal) {
-    var setModal = React.useContext(ModalContext).setModal;
+var ModalContext = React.createContext({
+    setModal: function () { },
+    closeModal: function () { },
+});
+var ChildWrapper = React__namespace.memo(function (_a) {
+    var children = _a.children;
+    return React__namespace.createElement(React__namespace.Fragment, null, children);
+});
+var ModalProvider = function (_a) {
+    var children = _a.children, _b = _a.backgroundClassName, baseClassName = _b === void 0 ? "async-modals__background" : _b, _c = _a.exitDelay, exitDelay = _c === void 0 ? 0 : _c, _d = _a.backgroundOpacity, backgroundOpacity = _d === void 0 ? 0.5 : _d;
+    var _e = React.useState({
+        exitDelay: exitDelay,
+    }), state = _e[0], setState = _e[1];
+    // Timer for tracking when the modal is closing (animation)
+    var animationTimer = React.useRef();
+    // Close the modal, optionally passing in some data
+    var closeModal = function (data) {
+        var _a;
+        if (exitDelay) {
+            // If exit delay is set then dont unmount until timer is up
+            setState(function (s) { return (__assign(__assign({}, s), { isClosing: true })); });
+            animationTimer.current = window.setTimeout(function () {
+                var _a;
+                (_a = state.modal) === null || _a === void 0 ? void 0 : _a.resolve(data);
+                setState({});
+            }, exitDelay);
+        }
+        else {
+            (_a = state.modal) === null || _a === void 0 ? void 0 : _a.resolve(data);
+            setState({});
+        }
+    };
+    // Cleanup hook for animation timer
+    React.useEffect(function () {
+        //listener to prevent navigation and instead close the modal
+        var listener = function (e) {
+            var _a;
+            console.log(e.state);
+            if (((_a = e.state) === null || _a === void 0 ? void 0 : _a.modal) !== true) {
+                closeModal();
+            }
+        };
+        // window.history.pushState({modal: false}, '');
+        window.addEventListener('popstate', listener);
+        return function () { return window.clearTimeout(animationTimer.current); };
+    }, []);
+    var context = {
+        setModal: function (obj) {
+            history.replaceState({ modal: false }, '');
+            history.pushState({ modal: true }, '');
+            setState(function (s) { return (__assign(__assign({}, s), { modal: obj })); });
+        },
+        modal: state,
+        closeModal: function (data) {
+            closeModal(data);
+        }
+    };
+    return (React__namespace.createElement(ModalContext.Provider, { value: context },
+        React__namespace.createElement(ChildWrapper, null, children),
+        state.modal && (React__namespace.createElement("div", { className: typeof baseClassName === 'function' ? baseClassName(state.isClosing) : baseClassName, style: { transitionDuration: exitDelay + "ms", backgroundColor: state.isClosing ? undefined : "rgba(0,0,0," + backgroundOpacity + ")" }, id: "modal-back", onMouseDown: function (e) {
+                var _a, _b;
+                if (((_a = state.modal) === null || _a === void 0 ? void 0 : _a.canClose) &&
+                    ((_b = e.target) === null || _b === void 0 ? void 0 : _b.id) === "modal-back") {
+                    closeModal();
+                }
+            } },
+            React__namespace.createElement(state.modal.component, { data: state.modal.data, submit: function (data) { return closeModal(data); }, cancel: function () { return closeModal(); }, isClosing: state.isClosing })))));
+};
+
+function useModal(modalComponent, modalOptions) {
+    var _this = this;
+    if (modalOptions === void 0) { modalOptions = {}; }
+    var _a = React.useContext(ModalContext), setModal = _a.setModal, closeModal = _a.closeModal;
     return {
-        show: function (options) {
-            if (options === void 0) { options = {}; }
-            return __awaiter(void 0, void 0, void 0, function () {
+        show: function (component, options) {
+            if (options === void 0) { options = modalOptions; }
+            return __awaiter(_this, void 0, void 0, function () {
                 return __generator(this, function (_a) {
                     return [2 /*return*/, new Promise(function (resolve, reject) {
                             var obj = {
                                 resolve: resolve,
                                 reject: reject,
                                 data: options.data,
-                                component: modal,
-                                canClose: options.canClose === undefined ? true : options.canClose,
+                                component: component || modalComponent,
+                                canClose: Boolean(options.canClose),
                             };
-                            setModal(obj, options.backgroundClassName);
+                            setModal(obj);
                         })];
                 });
             });
         },
+        close: function () { return closeModal(); }
     };
-};
+}
 
 exports.ModalProvider = ModalProvider;
 exports.useModal = useModal;

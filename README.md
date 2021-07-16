@@ -1,7 +1,14 @@
 [![npm](https://img.shields.io/npm/v/async-modals)](https://www.npmjs.com/package/async-modals)
 [![Types](https://img.shields.io/npm/types/async-modals.svg)](https://www.npmjs.com/package/async-modals)
+[![Downloads](https://img.shields.io/npm/dt/async-modals.svg)](https://www.npmjs.com/package/async-modals)
 # Async Modals
 
+Async modals is a hook-based way of showing modals in React using promises.
+
+## Features:
+ * **Define once, use anywhere** - once you've written your modal component, you can use it within any other component without duplicating any code!
+ * **Flexible** - easily pass data back and forth between the modal and calling component
+ * **Un-opinionated styling** - Async Modals doesnt ship with any predefined styles, leaving you free to use it with your favourite css library!
 # Installation and usage
 
 To use async-modals install it via npm or yarn

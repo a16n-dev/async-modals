@@ -1,0 +1,8 @@
+.async-modals__background {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  display: flex;
+  background: rgba(0, 0, 0, 0);
+  transition-property: background-color;
+}

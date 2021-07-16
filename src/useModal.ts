@@ -1,38 +1,53 @@
 import { ComponentType, useContext } from 'react';
 import { Modal, ModalContext, ModalObject, } from './ModalProvider';
 
-interface options<T> {
+//Options the user can specify
+interface options<T> extends settings{
   /**
    * Data that will be accessible in the component as props
    */
   data?: T;
-  /**
-   * Classes to apply to the background when the modal is open
-   */
-  backgroundClassName?: string;
+
+}
+
+interface settings {
   /**
    * Allow the user to close the modal by clicking on the background.
    * By default this is set to true
    */
-  canClose?: boolean;
+   canClose?: boolean;
+   /**
+    * Add a delay between when the modal is closed and when it is removed from the component tree.
+    * Use this to add an close animation to the modal 
+    */
+   unRenderDelay?: number;
 }
 
-export const useModal = <req,res>(modal: ComponentType<Modal<req, res>>) => {
-  const { setModal } = useContext(ModalContext);
+// Overloads
+export function useModal(modalComponent?: undefined, modalOptions?: settings): {
+  show: <Data, Response>(component: ComponentType<Modal<Data, Response>>, options?: options<Data>) => Promise<Response | undefined>;
+  close: () => void;
+};
+export function useModal<Data,Response>(modalComponent: ComponentType<Modal<Data, Response>>, modalOptions?: options<Data>): {
+  show: (options?: options<Data>) => Promise<Response | undefined>;
+  close: () => void;
+};
+
+export function useModal<Data,Response>(modalComponent?: ComponentType<Modal<Data, Response>>, modalOptions: options<Data> = {}): any {
+  const { setModal, closeModal } = useContext(ModalContext);
 
   return {
-    show: async(
-      options: options<req> = {}
-    ): Promise<res | undefined> =>
-      new Promise((resolve, reject) => {
-        const obj: ModalObject<res> = {
-          resolve,
-          reject,
-          data: options.data,
-          component: modal,
-          canClose: options.canClose === undefined ? true : options.canClose,
-        };
-        setModal(obj, options.backgroundClassName);
-      }),
+    show: async (component: ComponentType<Modal<Data, Response>>, options: options<Data> = modalOptions): Promise<Response | undefined> =>
+    new Promise((resolve, reject) => {
+      const obj: ModalObject<Data, Response> = {
+        resolve,
+        reject,
+        data: options.data,
+        component: component || modalComponent,
+        canClose: Boolean(options.canClose),
+      };
+      setModal(obj);
+    }), 
+    close: () => closeModal()
   };
 };

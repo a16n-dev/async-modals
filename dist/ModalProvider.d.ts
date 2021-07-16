@@ -1,25 +1,33 @@
-import * as React from 'react';
-import { ComponentType } from 'react';
-export interface ModalObject<res = any, req = any> {
-    resolve: (value: res) => void;
+import * as React from "react";
+import { ComponentType } from "react";
+export interface ModalObject<Data = any, Response = any> {
+    resolve: (data: Response) => void;
     reject: (reason?: any) => void;
-    data: req;
-    component: ComponentType<Modal<req, res>>;
+    data?: Data;
+    component: ComponentType<Modal<Data, Response>>;
     canClose: boolean;
 }
-export interface Modal<T, R = unknown> {
-    data: T;
-    submit: (res: R) => void;
+export interface Modal<Data, Response = unknown> {
+    data: Data;
+    submit: (res: Response) => void;
     cancel: () => void;
+    isClosing?: boolean;
 }
 interface contextState {
-    modal?: ModalObject;
-    setModal: (obj: ModalObject, backgroundClassName?: string) => void;
+    modal?: ModalState;
+    setModal: (obj: ModalObject) => void;
+    closeModal: (data?: unknown) => void;
 }
 export interface ModalProviderProps {
-    backgroundClassName?: string;
-    backgroundId?: string;
+    backgroundClassName?: string | ((isClosing?: boolean) => string);
+    exitDelay?: number;
+    backgroundOpacity?: number;
 }
 export declare const ModalContext: React.Context<contextState>;
+interface ModalState {
+    modal?: ModalObject;
+    isClosing?: boolean;
+    exitDelay?: number;
+}
 export declare const ModalProvider: React.FC<ModalProviderProps>;
 export {};
