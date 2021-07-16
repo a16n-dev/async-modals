@@ -83,7 +83,6 @@ export const ModalProvider: React.FC<ModalProviderProps> = ({
   useEffect(() => {
     //listener to prevent navigation and instead close the modal
     const listener = (e: any) => {
-      console.log(e.state);
       if(e.state?.modal !== true){
         closeModal();
       }
@@ -92,7 +91,10 @@ export const ModalProvider: React.FC<ModalProviderProps> = ({
     
     window.addEventListener('popstate', listener);
     
-    return () => window.clearTimeout(animationTimer.current)
+    return () => {
+      window.clearTimeout(animationTimer.current)
+      window.removeEventListener('popstate', listener);
+    }
   }, [])
 
 
