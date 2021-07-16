@@ -19,15 +19,14 @@ interface contextState {
     closeModal: (data?: unknown) => void;
 }
 export interface ModalProviderProps {
-    backgroundClassName?: string | ((isClosing?: boolean) => string);
-    exitDelay?: number;
+    backgroundClassName?: string | ((closed?: boolean) => string);
+    animated?: boolean;
     backgroundOpacity?: number;
 }
 export declare const ModalContext: React.Context<contextState>;
 interface ModalState {
     modal?: ModalObject;
     isClosing?: boolean;
-    exitDelay?: number;
 }
 export declare const ModalProvider: React.FC<ModalProviderProps>;
 export {};

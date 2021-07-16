@@ -1,8 +1,14 @@
 import * as React from "react";
-import { ComponentType, createContext, useEffect, useRef, useState } from "react";
+import {
+  ComponentType,
+  createContext,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 
 // A Modal object stores information about a modal being shown
-export interface ModalObject<Data = any, Response = any, > {
+export interface ModalObject<Data = any, Response = any> {
   resolve: (data: Response) => void;
   reject: (reason?: any) => void;
   data?: Data;
@@ -25,10 +31,10 @@ interface contextState {
 
 export interface ModalProviderProps {
   // Classnames to pass to the modal background component
-  backgroundClassName?: string | ((isClosing?: boolean) => string);
+  backgroundClassName?: string | ((closed?: boolean) => string);
 
-  // add a delay between when the modal closes and when the component unmounts, this allows time for a closing animation to play
-  exitDelay?: number;
+  // will instead wait for the transitioned event to fire before closing
+  animated?: boolean;
 
   // background opacity - defaults to 50%
   backgroundOpacity?: number;
@@ -44,35 +50,39 @@ const ChildWrapper = React.memo(({ children }) => <>{children}</>);
 interface ModalState {
   modal?: ModalObject;
   isClosing?: boolean;
-  exitDelay?: number;
 }
 
 export const ModalProvider: React.FC<ModalProviderProps> = ({
   children,
-  backgroundClassName: baseClassName = "async-modals__background",
-  exitDelay = 0,
-  backgroundOpacity = 0.5,
+  animated,
+  backgroundClassName: baseClassName = animated
+    ? (isClosing) =>
+        `async-modals__bg-base async-modals__${isClosing ? "closing" : "open"}`
+    : "async-modals__bg-base async-modals__open",
 }) => {
+  const [state, setState] = useState<ModalState>({});
 
-  const [state, setState] = useState<ModalState>({
-    exitDelay,
-  });
-
-  // Timer for tracking when the modal is closing (animation)
-  const animationTimer = useRef<number>();
+  const modalContainer = useRef<HTMLDivElement>(null);
 
   // Close the modal, optionally passing in some data
   const closeModal = (data?: unknown) => {
-    if(exitDelay){
+    if (animated) {
       // If exit delay is set then dont unmount until timer is up
-      setState(s => ({
+      setState((s) => ({
         ...s,
         isClosing: true,
-      }))
-      animationTimer.current = window.setTimeout(() => {
+      }));
+
+      const listener = () => {
         state.modal?.resolve(data);
         setState({});
-      }, exitDelay)
+      };
+
+      modalContainer.current?.addEventListener("transitionend", listener);
+      modalContainer.current?.addEventListener("webkitTransitionEnd", listener);
+      modalContainer.current?.addEventListener("animationend", listener);
+      modalContainer.current?.addEventListener("webkitAnimationEnd", listener);
+      
     } else {
       state.modal?.resolve(data);
       setState({});
@@ -83,26 +93,22 @@ export const ModalProvider: React.FC<ModalProviderProps> = ({
   useEffect(() => {
     //listener to prevent navigation and instead close the modal
     const listener = (e: any) => {
-      if(e.state?.modal !== true){
+      if (e.state?.modal !== true) {
         closeModal();
       }
-      }
-      // window.history.pushState({modal: false}, '');
-    
-    window.addEventListener('popstate', listener);
-    
+    };
+
+    window.addEventListener("popstate", listener);
+
     return () => {
-      window.clearTimeout(animationTimer.current)
-      window.removeEventListener('popstate', listener);
-    }
-  }, [])
-
-
+      window.removeEventListener("popstate", listener);
+    };
+  }, []);
 
   const context: contextState = {
     setModal: (obj) => {
-      history.replaceState({modal: false}, '');
-      history.pushState({modal: true}, '');
+      history.replaceState({ modal: false }, "");
+      history.pushState({ modal: true }, "");
       setState((s) => ({
         ...s,
         modal: obj,
@@ -111,7 +117,7 @@ export const ModalProvider: React.FC<ModalProviderProps> = ({
     modal: state,
     closeModal: (data?: unknown) => {
       closeModal(data);
-    }
+    },
   };
 
   return (
@@ -119,8 +125,11 @@ export const ModalProvider: React.FC<ModalProviderProps> = ({
       <ChildWrapper>{children}</ChildWrapper>
       {state.modal && (
         <div
-          className={typeof baseClassName === 'function' ? baseClassName(state.isClosing) : baseClassName}
-          style={{transitionDuration: `${exitDelay}ms`, backgroundColor: state.isClosing ? undefined : `rgba(0,0,0,${backgroundOpacity})`}}
+          className={
+            typeof baseClassName === "function"
+              ? baseClassName(state.isClosing)
+              : baseClassName
+          }
           id="modal-back"
           onMouseDown={(e) => {
             if (
@@ -130,6 +139,7 @@ export const ModalProvider: React.FC<ModalProviderProps> = ({
               closeModal();
             }
           }}
+          ref={modalContainer}
         >
           <state.modal.component
             data={state.modal.data}

@@ -97,26 +97,31 @@ var ChildWrapper = React__namespace.memo(function (_a) {
     return React__namespace.createElement(React__namespace.Fragment, null, children);
 });
 var ModalProvider = function (_a) {
-    var children = _a.children, _b = _a.backgroundClassName, baseClassName = _b === void 0 ? "async-modals__background" : _b, _c = _a.exitDelay, exitDelay = _c === void 0 ? 0 : _c, _d = _a.backgroundOpacity, backgroundOpacity = _d === void 0 ? 0.5 : _d;
-    var _e = React.useState({
-        exitDelay: exitDelay,
-    }), state = _e[0], setState = _e[1];
-    // Timer for tracking when the modal is closing (animation)
-    var animationTimer = React.useRef();
+    var children = _a.children, animated = _a.animated, _b = _a.backgroundClassName, baseClassName = _b === void 0 ? animated
+        ? function (isClosing) {
+            return "async-modals__bg-base async-modals__" + (isClosing ? "closing" : "open");
+        }
+        : "async-modals__bg-base async-modals__open" : _b;
+    var _c = React.useState({}), state = _c[0], setState = _c[1];
+    var modalContainer = React.useRef(null);
     // Close the modal, optionally passing in some data
     var closeModal = function (data) {
-        var _a;
-        if (exitDelay) {
+        var _a, _b, _c, _d, _e;
+        if (animated) {
             // If exit delay is set then dont unmount until timer is up
             setState(function (s) { return (__assign(__assign({}, s), { isClosing: true })); });
-            animationTimer.current = window.setTimeout(function () {
+            var listener = function () {
                 var _a;
                 (_a = state.modal) === null || _a === void 0 ? void 0 : _a.resolve(data);
                 setState({});
-            }, exitDelay);
+            };
+            (_a = modalContainer.current) === null || _a === void 0 ? void 0 : _a.addEventListener("transitionend", listener);
+            (_b = modalContainer.current) === null || _b === void 0 ? void 0 : _b.addEventListener("webkitTransitionEnd", listener);
+            (_c = modalContainer.current) === null || _c === void 0 ? void 0 : _c.addEventListener("animationend", listener);
+            (_d = modalContainer.current) === null || _d === void 0 ? void 0 : _d.addEventListener("webkitAnimationEnd", listener);
         }
         else {
-            (_a = state.modal) === null || _a === void 0 ? void 0 : _a.resolve(data);
+            (_e = state.modal) === null || _e === void 0 ? void 0 : _e.resolve(data);
             setState({});
         }
     };
@@ -125,35 +130,37 @@ var ModalProvider = function (_a) {
         //listener to prevent navigation and instead close the modal
         var listener = function (e) {
             var _a;
-            console.log(e.state);
             if (((_a = e.state) === null || _a === void 0 ? void 0 : _a.modal) !== true) {
                 closeModal();
             }
         };
-        // window.history.pushState({modal: false}, '');
-        window.addEventListener('popstate', listener);
-        return function () { return window.clearTimeout(animationTimer.current); };
+        window.addEventListener("popstate", listener);
+        return function () {
+            window.removeEventListener("popstate", listener);
+        };
     }, []);
     var context = {
         setModal: function (obj) {
-            history.replaceState({ modal: false }, '');
-            history.pushState({ modal: true }, '');
+            history.replaceState({ modal: false }, "");
+            history.pushState({ modal: true }, "");
             setState(function (s) { return (__assign(__assign({}, s), { modal: obj })); });
         },
         modal: state,
         closeModal: function (data) {
             closeModal(data);
-        }
+        },
     };
     return (React__namespace.createElement(ModalContext.Provider, { value: context },
         React__namespace.createElement(ChildWrapper, null, children),
-        state.modal && (React__namespace.createElement("div", { className: typeof baseClassName === 'function' ? baseClassName(state.isClosing) : baseClassName, style: { transitionDuration: exitDelay + "ms", backgroundColor: state.isClosing ? undefined : "rgba(0,0,0," + backgroundOpacity + ")" }, id: "modal-back", onMouseDown: function (e) {
+        state.modal && (React__namespace.createElement("div", { className: typeof baseClassName === "function"
+                ? baseClassName(state.isClosing)
+                : baseClassName, id: "modal-back", onMouseDown: function (e) {
                 var _a, _b;
                 if (((_a = state.modal) === null || _a === void 0 ? void 0 : _a.canClose) &&
                     ((_b = e.target) === null || _b === void 0 ? void 0 : _b.id) === "modal-back") {
                     closeModal();
                 }
-            } },
+            }, ref: modalContainer },
             React__namespace.createElement(state.modal.component, { data: state.modal.data, submit: function (data) { return closeModal(data); }, cancel: function () { return closeModal(); }, isClosing: state.isClosing })))));
 };
 

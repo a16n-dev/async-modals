@@ -1,9 +1,28 @@
-.async-modals__background {
+.async-modals__bg-base {
+  --duration: 500ms;
+  --opacity: 0.5;
   position: fixed;
   inset: 0;
   z-index: 9999;
   display: flex;
   flex-direction: column;
-  background-color: rgba(0, 0, 0, 0);
   transition-property: background-color;
+  transition-duration: var(--duration);
+  -webkit-animation-name: fadeIn;
+  animation-name: fadeIn; 
+  -webkit-animation-duration: var(--duration);
+  animation-duration: var(--duration);
 }
+
+.async-modals__bg-base.async-modals__open {
+  background-color: rgba(0, 0, 0, var(--opacity));
+}
+
+.async-modals__bg-base.async-modals__closing {
+  background-color: rgba(0, 0, 0, 0);
+}
+
+@keyframes fadeIn {
+  0% {background-color: rgba(0, 0, 0, 0);}
+  100% {background-color: rgba(0, 0, 0, var(--opacity))}
+} 
