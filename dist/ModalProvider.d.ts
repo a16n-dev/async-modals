@@ -1,27 +1,13 @@
 import * as React from "react";
-import { ComponentType } from "react";
-export interface ModalObject<Data = any, Response = any> {
-    resolve: (data: Response) => void;
-    reject: (reason?: any) => void;
-    data?: Data;
-    component: ComponentType<Modal<Data, Response>>;
-    canClose: boolean;
-}
-export interface Modal<Data, Response = unknown> {
-    data: Data;
-    submit: (res: Response) => void;
-    cancel: () => void;
-    isClosing?: boolean;
-}
+import { ModalObject, ModalSettings } from "./types";
 interface contextState {
     modal?: ModalState;
     setModal: (obj: ModalObject) => void;
-    closeModal: (data?: unknown) => void;
+    closeModal: () => void;
+    setModalData: (data?: unknown) => void;
 }
 export interface ModalProviderProps {
-    backgroundClassName?: string | ((closed?: boolean) => string);
-    animated?: boolean;
-    backgroundOpacity?: number;
+    defaultSettings?: ModalSettings;
 }
 export declare const ModalContext: React.Context<contextState>;
 interface ModalState {

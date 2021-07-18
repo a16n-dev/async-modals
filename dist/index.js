@@ -50,6 +50,18 @@ var __assign = function() {
     return __assign.apply(this, arguments);
 };
 
+function __rest(s, e) {
+    var t = {};
+    for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p) && e.indexOf(p) < 0)
+        t[p] = s[p];
+    if (s != null && typeof Object.getOwnPropertySymbols === "function")
+        for (var i = 0, p = Object.getOwnPropertySymbols(s); i < p.length; i++) {
+            if (e.indexOf(p[i]) < 0 && Object.prototype.propertyIsEnumerable.call(s, p[i]))
+                t[p[i]] = s[p[i]];
+        }
+    return t;
+}
+
 function __awaiter(thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -88,41 +100,57 @@ function __generator(thisArg, body) {
     }
 }
 
+var disablebodyScroll = function () {
+    document.body.style.overflow = 'hidden';
+};
+var enableBodyScroll = function () {
+    document.body.style.overflow = '';
+};
+var getBaseClassnames = function (animated) {
+    return animated
+        ? function (isClosing) {
+            return "async-modals__bg-base async-modals__" + (isClosing ? "closing" : "open");
+        }
+        : "async-modals__bg-base async-modals__open";
+};
+
 var ModalContext = React.createContext({
     setModal: function () { },
     closeModal: function () { },
+    setModalData: function () { },
 });
 var ChildWrapper = React__namespace.memo(function (_a) {
     var children = _a.children;
     return React__namespace.createElement(React__namespace.Fragment, null, children);
 });
+var defaultModalOptions = {
+    canClose: true,
+    showBg: true,
+};
 var ModalProvider = function (_a) {
-    var children = _a.children, animated = _a.animated, _b = _a.backgroundClassName, baseClassName = _b === void 0 ? animated
-        ? function (isClosing) {
-            return "async-modals__bg-base async-modals__" + (isClosing ? "closing" : "open");
-        }
-        : "async-modals__bg-base async-modals__open" : _b;
-    var _c = React.useState({}), state = _c[0], setState = _c[1];
-    var modalContainer = React.useRef(null);
+    var children = _a.children, defaultSettings = _a.defaultSettings;
+    var _b = React.useState({}), state = _b[0], setState = _b[1];
+    var modalBg = React.useRef(null);
     // Close the modal, optionally passing in some data
     var closeModal = function (data) {
         var _a, _b, _c, _d, _e;
-        if (animated) {
-            // If exit delay is set then dont unmount until timer is up
+        var close = function () {
+            var _a;
+            enableBodyScroll();
+            (_a = state.modal) === null || _a === void 0 ? void 0 : _a.resolve(data);
+            setState({});
+        };
+        if ((_a = state.modal) === null || _a === void 0 ? void 0 : _a.settings.animated) {
+            // If animated then wait for animation or transition event to fire
             setState(function (s) { return (__assign(__assign({}, s), { isClosing: true })); });
-            var listener = function () {
-                var _a;
-                (_a = state.modal) === null || _a === void 0 ? void 0 : _a.resolve(data);
-                setState({});
-            };
-            (_a = modalContainer.current) === null || _a === void 0 ? void 0 : _a.addEventListener("transitionend", listener);
-            (_b = modalContainer.current) === null || _b === void 0 ? void 0 : _b.addEventListener("webkitTransitionEnd", listener);
-            (_c = modalContainer.current) === null || _c === void 0 ? void 0 : _c.addEventListener("animationend", listener);
-            (_d = modalContainer.current) === null || _d === void 0 ? void 0 : _d.addEventListener("webkitAnimationEnd", listener);
+            var listener = function () { return close(); };
+            (_b = modalBg.current) === null || _b === void 0 ? void 0 : _b.addEventListener("transitionend", listener);
+            (_c = modalBg.current) === null || _c === void 0 ? void 0 : _c.addEventListener("webkitTransitionEnd", listener);
+            (_d = modalBg.current) === null || _d === void 0 ? void 0 : _d.addEventListener("animationend", listener);
+            (_e = modalBg.current) === null || _e === void 0 ? void 0 : _e.addEventListener("webkitAnimationEnd", listener);
         }
         else {
-            (_e = state.modal) === null || _e === void 0 ? void 0 : _e.resolve(data);
-            setState({});
+            close();
         }
     };
     // Cleanup hook for animation timer
@@ -140,57 +168,64 @@ var ModalProvider = function (_a) {
         };
     }, []);
     var context = {
-        setModal: function (obj) {
+        setModal: function (_a) {
+            var settings = _a.settings, rest = __rest(_a, ["settings"]);
             history.replaceState({ modal: false }, "");
             history.pushState({ modal: true }, "");
-            setState(function (s) { return (__assign(__assign({}, s), { modal: obj })); });
+            if (!settings.allowContentScrolling) {
+                disablebodyScroll();
+            }
+            var newSettings = __assign(__assign(__assign({}, defaultModalOptions), defaultSettings), settings);
+            setState(function (s) { return (__assign(__assign({}, s), { modal: __assign(__assign({}, rest), { settings: __assign({ backgroundClassName: getBaseClassnames(newSettings.animated) }, newSettings) }) })); });
         },
         modal: state,
-        closeModal: function (data) {
-            closeModal(data);
+        closeModal: function () {
+            history.back();
+            closeModal();
         },
+        setModalData: function (data) {
+            setState(function (s) { return (__assign(__assign({}, s), { modal: __assign(__assign({}, s.modal), { data: data }) })); });
+        }
     };
     return (React__namespace.createElement(ModalContext.Provider, { value: context },
         React__namespace.createElement(ChildWrapper, null, children),
-        state.modal && (React__namespace.createElement("div", { className: typeof baseClassName === "function"
-                ? baseClassName(state.isClosing)
-                : baseClassName, id: "modal-back", onMouseDown: function (e) {
+        state.modal && (React__namespace.createElement("div", { className: "async-modals__wrapper", id: "modal-back", onMouseDown: function (e) {
                 var _a, _b;
-                if (((_a = state.modal) === null || _a === void 0 ? void 0 : _a.canClose) &&
+                if (((_a = state.modal) === null || _a === void 0 ? void 0 : _a.settings.canClose) &&
                     ((_b = e.target) === null || _b === void 0 ? void 0 : _b.id) === "modal-back") {
                     closeModal();
                 }
-            }, ref: modalContainer },
-            React__namespace.createElement(state.modal.component, { data: state.modal.data, submit: function (data) { return closeModal(data); }, cancel: function () { return closeModal(); }, isClosing: state.isClosing })))));
+            } },
+            React__namespace.createElement("div", { className: (typeof state.modal.settings.backgroundClassName === "function"
+                    ? state.modal.settings.backgroundClassName(state.isClosing)
+                    : state.modal.settings.backgroundClassName) + " " + (!state.modal.settings.showBg && "async-modals__hidden"), ref: modalBg }),
+            React__namespace.createElement("div", { className: "async-modals__container " + state.modal.settings.containerClassName },
+                React__namespace.createElement(state.modal.component, { data: state.modal.data, submit: function (data) { return closeModal(data); }, cancel: function () { return closeModal(); }, isClosing: state.isClosing }))))));
 };
 
 function useModal(modalComponent, modalOptions) {
     var _this = this;
-    if (modalOptions === void 0) { modalOptions = {}; }
-    var _a = React.useContext(ModalContext), setModal = _a.setModal, closeModal = _a.closeModal;
-    var show = function (component) { return function (options) {
-        if (options === void 0) { options = modalOptions; }
-        return __awaiter(_this, void 0, void 0, function () {
-            return __generator(this, function (_a) {
-                return [2 /*return*/, new Promise(function (resolve, reject) {
-                        var obj = {
-                            resolve: resolve,
-                            reject: reject,
-                            data: options.data,
-                            component: component,
-                            canClose: Boolean(options.canClose),
-                        };
-                        setModal(obj);
-                    })];
-            });
+    var _a = React.useContext(ModalContext), setModal = _a.setModal, closeModal = _a.closeModal, setModalData = _a.setModalData;
+    var show = function (component) { return function (options) { return __awaiter(_this, void 0, void 0, function () {
+        return __generator(this, function (_a) {
+            return [2 /*return*/, new Promise(function (resolve, reject) {
+                    //compose options object
+                    var settings = __assign(__assign({}, modalOptions), options);
+                    var obj = {
+                        resolve: resolve,
+                        reject: reject,
+                        data: options === null || options === void 0 ? void 0 : options.data,
+                        component: component,
+                        settings: settings,
+                    };
+                    setModal(obj);
+                })];
         });
-    }; };
+    }); }; };
     return {
-        show: modalComponent ? show(modalComponent) : function (component, options) {
-            if (options === void 0) { options = modalOptions; }
-            return show(component)(options);
-        },
-        close: function () { return closeModal(); }
+        show: modalComponent ? show(modalComponent) : function (component, options) { return show(component)(options); },
+        close: function () { return closeModal(); },
+        updateModalData: modalComponent ? function (data) { setModalData(data); } : undefined
     };
 }
 
