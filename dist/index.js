@@ -113,6 +113,11 @@ var getBaseClassnames = function (animated) {
         }
         : "async-modals__bg-base async-modals__open";
 };
+var resolveStyles = function (settings) { return ({
+    '--duration': (settings.cssAnimationDuration || 500) + "ms",
+    '--opacity': settings.cssBgOpacity || 0.5,
+    '--tw-backdrop-opacity': settings.cssBgOpacity || 0.5,
+}); };
 
 var ModalContext = React.createContext({
     setModal: function () { },
@@ -189,7 +194,7 @@ var ModalProvider = function (_a) {
     };
     return (React__namespace.createElement(ModalContext.Provider, { value: context },
         React__namespace.createElement(ChildWrapper, null, children),
-        state.modal && (React__namespace.createElement("div", { className: "async-modals__wrapper", id: "modal-back", onMouseDown: function (e) {
+        state.modal && (React__namespace.createElement("div", { className: "async-modals__wrapper", id: "modal-back", style: resolveStyles(state.modal.settings), onMouseDown: function (e) {
                 var _a, _b;
                 if (((_a = state.modal) === null || _a === void 0 ? void 0 : _a.settings.canClose) &&
                     ((_b = e.target) === null || _b === void 0 ? void 0 : _b.id) === "modal-back") {

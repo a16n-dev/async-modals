@@ -5,10 +5,6 @@
 
 Async modals is a hook-based way of showing modals in React using promises.
 
-## Features:
- * **Define once, use anywhere** - once you've written your modal component, you can use it within any other component without duplicating any code!
- * **Flexible** - easily pass data back and forth between the modal and calling component
- * **Un-opinionated styling** - Async Modals doesnt ship with any predefined styles, leaving you free to use it with your favourite css library!
 # Installation and usage
 
 To use async-modals install it via npm or yarn
@@ -18,21 +14,22 @@ yarn add async-modals
 
 Then you can start using it:
 
-> Wrap your app in the ModalProvider Component
+Wrap your app in the ModalProvider Component and import the styles
 ```tsx
 import React from 'react';
-import {ModalProvider} from 'async-modals'
+import {ModalProvider} from 'async-modals';
+import 'async-modals/dist/style.css';
 
 const App: React.FC = () => {
   return (
-    <ModalProvider backgroundClassName='modal-bg'>
+    <ModalProvider>
       ...
     </ModalProvider>
   )
 }
 ```
 
-> Define a modal component
+Define a modal component
 ```tsx
 import React from 'react';
 import {Modal} from 'async-modals'
@@ -47,12 +44,11 @@ const MyModal: React.FC<Modal<{name: string}, void>> = ({data, submit}) => {
 }
 ```
 
-> Use the modal anywhere
+Use the modal anywhere
 ```tsx
 import React from 'react';
 import {useModal} from 'async-modals'
 import MyModal from './MyModal'
-
 
 const Page: React.FC = () => {
 
@@ -73,6 +69,69 @@ const Page: React.FC = () => {
     </div>
   )
 }
+```
+
+<h2 id="options">Options</h2>
+You may change the default values of any of these options by passing them to the `defaultSettings` prop of the modal provider
+
+| Option                  | Type                                    | Description                                                                                                                                                                                |
+|-------------------------|-----------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `canClose`              | `boolean`                               | If `true`, the user can click on the background to close the modal. Set to `true` by default                                                                                               |
+| `showBg`                | `boolean`                               | Show a semi-transparent background behind the modal (see also `cssBgOpacity`). Set to `true` by default                                                                                    |
+| `AllowContentScrolling` | `boolean`                               | Allow the user to scroll the content of the page while the modal is open. Set to `false` by default                                                                                        |
+| `Animated`              | `boolean`                               | Set this to true if you want to use animations or transitions (see animation section for more info)                                                                                        |
+| `containerClassName`    | `string`                                | classes to apply to the modal container.                                                                                                                                                   |
+| `BackgroundClassName`   | `string \| (closed: boolean) => string` | Classes to apply to the background that appears behind the modal. Specifying a function for this property is intended for animation by applying different classes when the modal is closed |
+| `cssBgOpacity`          | `number`                                | Sets the opacity of the background behind the modal. Defaults to 0.5                                                                                                                       |
+| `cssAnimationDuration`  | `number`                                | Will not have any effect unless `Animated` is `true`. Sets the duration of the animation on the background via the `--duration` css variable                                               |
+
+## Functions
+### `useModal`
+This hook allows you to show a modal component.
+
+*Basic Usage*
+```ts
+import ModalComponent from '../components/ModalComponent'
+
+...
+
+const modal = useModal(ModalComponent)
+```
+
+You can also specify any <a href="#options">options</a> here as well
+```ts
+import ModalComponent from '../components/ModalComponent'
+
+...
+
+const modal = useModal(ModalComponent, {
+  showBg: false,
+  AllowContentScrolling: true,
+})
+```
+
+This returns a modal object with the following methods
+
+| Method                  | Description                                                                                                                                                                                                                                              |   |
+|-------------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|---|
+| `show(options)`         | Display the modal. For `options` you may specify any option, and additionally you may use the `data` property to pass data to the modal. This returns a promise that can be awaited. Any options specified here will override those passed to `useModal` |   |
+| `close()`               | Closes the modal if it is open.                                                                                                                                                                                                                          |   |
+| `updateModalData(data)` | Update the data being displayed in the modal while it is open                                                                                                                                                                                            |   |                                                                                                                      |   |
+
+Below is an example of showing an alert modal with a message being passed in
+```js
+...
+
+const modal = useModal(AlertModal);
+
+const showAlert = async () => {
+  await modal.show({
+    data: {
+      message: "This is an alert"
+    }
+  })
+};
+...
 ```
 
 ## License

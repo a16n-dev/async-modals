@@ -1,6 +1,4 @@
 .async-modals__bg-base {
-  --duration: 500ms;
-  --opacity: 0.5;
   position: fixed;
   inset: 0;
   transition-property: background-color;

@@ -1,13 +1,13 @@
 import * as React from "react";
 import { createContext, useEffect, useRef, useState } from "react";
 import { ModalObject, ModalSettings } from "./types";
-import { disablebodyScroll, enableBodyScroll, getBaseClassnames } from "./util";
+import { disablebodyScroll, enableBodyScroll, getBaseClassnames, resolveStyles } from "./util";
 
 interface contextState {
   modal?: ModalState;
   setModal: (obj: ModalObject) => void;
   closeModal: () => void;
-  setModalData: (data?: unknown) => void
+  setModalData: (data?: unknown) => void;
 }
 
 export interface ModalProviderProps {
@@ -132,6 +132,7 @@ export const ModalProvider: React.FC<ModalProviderProps> = ({
         <div
           className={`async-modals__wrapper`}
           id="modal-back"
+          style={resolveStyles(state.modal.settings)}
           onMouseDown={(e) => {
             if (
               state.modal?.settings.canClose &&

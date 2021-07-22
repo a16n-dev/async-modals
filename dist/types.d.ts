@@ -45,4 +45,12 @@ export interface ModalSettings {
      * Animated
      */
     animated?: boolean;
+    /**
+     * Sets the opacity of the background when the modal is open
+     */
+    cssBgOpacity?: number;
+    /**
+     * Specify the duration of the animation in milliseconds if animation is enabled
+     */
+    cssAnimationDuration?: number;
 }
