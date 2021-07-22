@@ -111,14 +111,14 @@ Note that as async-modal doesnt provide any styles for the modal iteself, you wi
 const ConfirmationModal = ({data, submit, cancel}) => {
   <div className="modal">
     <div className="modal-header">
-    <h3>Confirm Action</h3>
-    <button onClick={cancel}>x</button>
+      <h3>Confirm Action</h3>
+      <button onClick={cancel}>x</button>
     </div>
-    <div className="modal-body">
-      {data.message}
+      <div className="modal-body">
+        {data.message}
+      <button onClick={() => submit(false)}>Cancel</button>
+      <button onClick={() => submit(true)}>Confirm</button>
     </div>
-    <button onClick={() => submit(false)}>Cancel</button>
-    <button onClick={() => submit(true)}>Confirm</button>
   </div>
 }
 
@@ -133,7 +133,7 @@ A complete list of the props passed into the modal are:
 | `data`      | Object containing data passed to the modal via `useModal`                                                                                             |
 | `cancel`    | Calling this function indicates the user has cancelled the modal, for example by pressing the 'x' button that is present in the corner of most modals |
 | `submit`    | Similar to cancel, however `submit` allows you to pass some data back to the calling component                                                        |
-| `isClosing` | A boolean representing if the modal is closing. This allows you to play an exit animation or transition                                               |
+| `isClosing` | A boolean representing if the modal is closing. This allows you to play an exit animation or transition. To make use of this, ensure that the `animation` option is set to true                                               |
 
 ## Functions
 
