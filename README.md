@@ -3,7 +3,9 @@
 [![Downloads](https://img.shields.io/npm/dt/async-modals.svg)](https://www.npmjs.com/package/async-modals)
 # Async Modals
 
-Async modals is a hook-based way of showing modals in React using promises.
+A hook-based way of showing modals in React using promises designed to abstract away the complexity of modal windows.
+
+Interested in contributing to async-modals? Please read the section below on [Contributing](#contributing)
 
 Table of Contents
 * [Quick Start](#start)
@@ -12,7 +14,8 @@ Table of Contents
   * [Options](#options)
   * [ModalProvider](#modalProvider)
   * [useModal](#useModal)
-  
+* [Contributing](#contributing)
+
 <h1 id="start">Quick Start</h1>
 
 To use async-modals install it via npm or yarn
@@ -79,7 +82,7 @@ const Page: React.FC = () => {
 ```
 
 <h1 id="examples">Examples</h1>
-For a set of examples covering common use cases and functionality, see <a>examples here</a>
+For a set of examples covering common use cases and functionality, see <a href="https://github.com/alexn400/async-modals/tree/main/examples">examples here</a>
 
 <h1 id="usage">Usage</h1>
 <h2 id="options">Options</h2>
@@ -182,7 +185,7 @@ const showAlert = async () => {
 
 You can also await data being returned from a modal component. The below example shows a modal that gets a user's name and then prints it to the console
 
-> When receieving data from a modal, it is important to check if it exists before using it. In this instance, ff the user exits the modal, `name` will be undefined
+> When receieving data from a modal, it is important to check if it exists before using it. In this instance, if the user exits the modal, `name` will be undefined
 
 ```js
 
@@ -197,6 +200,12 @@ const welcome = async () => {
 };
 
 ```
+
+<h1 id="contributing">Contributing</h1>
+Any contributions, feature suggestions, or bug reports are welcome.
+
+
+The development of this package has mostly been motivated by my own project requirements and use cases. If there is a feature that you would like to see to support your own use cases, please open an <a href="https://github.com/alexn400/async-modals/issues">Issue</a> or a <a href="https://github.com/alexn400/async-modals/pulls">Pull Request</a>.
 ## License
 
 MIT Licensed. Copyright (c) Alexander Nicholson 2021.
