@@ -131,6 +131,7 @@ var ChildWrapper = React__namespace.memo(function (_a) {
 var defaultModalOptions = {
     canClose: true,
     showBg: true,
+    containerClassName: 'async-modals__center_modal'
 };
 var ModalProvider = function (_a) {
     var children = _a.children, defaultSettings = _a.defaultSettings;
