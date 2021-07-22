@@ -12,6 +12,7 @@ Table of Contents
 * [Examples](#examples)
 * [Usage](#usage)
   * [Options](#options)
+  * [Creating a modal component](#modal)
   * [ModalProvider](#modalProvider)
   * [useModal](#useModal)
 * [Contributing](#contributing)
@@ -98,6 +99,41 @@ These are the options availabe to pass to either `ModalProvider` or `useModal`. 
 | `backgroundClassName`   | `string \| (closed: boolean) => string` | Classes to apply to the background that appears behind the modal. Specifying a function for this property is intended for animation by applying different classes when the modal is closed |
 | `cssBgOpacity`          | `number`                                | Sets the opacity of the background behind the modal. Defaults to 0.5                                                                                                                       |
 | `cssAnimationDuration`  | `number`                                | Will not have any effect unless `Animated` is `true`. Sets the duration of the animation on the background via the `--duration` css variable                                               |
+
+<h2 id="modal">Creating a Modal Component</h2>
+You may use any React component as a modal, however a number of props are passed into to the modal that you can take advantage of
+
+Below is a simple implementation for a confirmation modal component.
+
+Note that as async-modal doesnt provide any styles for the modal iteself, you will need to provide your own styles or make use of a UI library such as bootstrap or Material UI. 
+```js
+
+const ConfirmationModal = ({data, submit, cancel}) => {
+  <div className="modal">
+    <div className="modal-header">
+    <h3>Confirm Action</h3>
+    <button onClick={cancel}>x</button>
+    </div>
+    <div className="modal-body">
+      {data.message}
+    </div>
+    <button onClick={() => submit(false)}>Cancel</button>
+    <button onClick={() => submit(true)}>Confirm</button>
+  </div>
+}
+
+
+export default ConfirmationModal;
+```
+
+A complete list of the props passed into the modal are:
+
+| Prop        | Description                                                                                                                                           |
+|-------------|-------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `data`      | Object containing data passed to the modal via `useModal`                                                                                             |
+| `cancel`    | Calling this function indicates the user has cancelled the modal, for example by pressing the 'x' button that is present in the corner of most modals |
+| `submit`    | Similar to cancel, however `submit` allows you to pass some data back to the calling component                                                        |
+| `isClosing` | A boolean representing if the modal is closing. This allows you to play an exit animation or transition                                               |
 
 ## Functions
 

@@ -28,11 +28,11 @@ interface ModalState {
   isClosing?: boolean;
 }
 
-const defaultModalOptions = {
+const defaultModalOptions: ModalSettings = {
   canClose: true,
   showBg: true,
+  containerClassName: 'async-modals__center_modal'
 }
-
 
 export const ModalProvider: React.FC<ModalProviderProps> = ({
   children,
