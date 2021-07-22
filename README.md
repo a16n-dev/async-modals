@@ -31,7 +31,7 @@ npm i async-modals
 
 To start using it:
 
-1. Wrap your app in the ModalProvider Component and import the styles
+1. Wrap your app in the `ModalProvider` Component and import the styles
 ```tsx
 import React from 'react';
 import {ModalProvider} from 'async-modals';
@@ -71,6 +71,7 @@ const Page: React.FC = () => {
   const alertModal = useModal(AlertModal);
 
   const handleClick = async () => {
+    
     //show the modal to the user
     await alertModal.show({
       data: {
@@ -88,7 +89,7 @@ const Page: React.FC = () => {
 ```
 
 <h1 id="examples">Examples</h1>
-For a set of examples covering common use cases and as well as more advanced functionality, checkout the examples <a href="https://github.com/alexn400/async-modals/tree/main/examples">shere</a>
+For a set of examples covering common use cases and as well as more advanced functionality, checkout the examples <a href="https://github.com/alexn400/async-modals/tree/main/examples">here</a>
 
 <h1 id="usage">Usage</h1>
 <h2 id="options">Options</h2>
