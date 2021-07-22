@@ -16,6 +16,7 @@ Table of Contents
   * [ModalProvider](#modalProvider)
   * [useModal](#useModal)
 * [Contributing](#contributing)
+* [License](#license)
 
 <h1 id="start">Quick Start</h1>
 
@@ -23,10 +24,14 @@ To use async-modals install it via npm or yarn
 ```
 yarn add async-modals
 ```
+or
+```
+npm i async-modals
+```
 
-Then you can start using it:
+To start using it:
 
-Wrap your app in the ModalProvider Component and import the styles
+1. Wrap your app in the ModalProvider Component and import the styles
 ```tsx
 import React from 'react';
 import {ModalProvider} from 'async-modals';
@@ -41,7 +46,7 @@ const App: React.FC = () => {
 }
 ```
 
-Define a modal component
+2. Define a modal component
 ```js
 import React from 'react';
 
@@ -55,7 +60,7 @@ const AlertModal = ({data, submit}) => {
 }
 ```
 
-Use the modal anywhere
+3. Use the modal anywhere
 ```tsx
 import React from 'react';
 import {useModal} from 'async-modals'
@@ -83,11 +88,12 @@ const Page: React.FC = () => {
 ```
 
 <h1 id="examples">Examples</h1>
-For a set of examples covering common use cases and functionality, see <a href="https://github.com/alexn400/async-modals/tree/main/examples">examples here</a>
+For a set of examples covering common use cases and as well as more advanced functionality, checkout the examples <a href="https://github.com/alexn400/async-modals/tree/main/examples">shere</a>
 
 <h1 id="usage">Usage</h1>
 <h2 id="options">Options</h2>
-These are the options availabe to pass to either `ModalProvider` or `useModal`. You may change the default values of any of these options by passing them to the `defaultSettings` prop of the modal provider
+
+These are the options availabe to pass to either `ModalProvider` or `useModal=`. You may change the default values of any of these options by passing them to the `defaultSettings` prop of the modal provider
 
 | Option                  | Type                                    | Description                                                                                                                                                                                |
 |-------------------------|-----------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
@@ -137,7 +143,7 @@ A complete list of the props passed into the modal are:
 
 ## Functions
 
-<h3 id="modalProvider">`ModalProvider`</h3>
+<h3 id="modalProvider">ModalProvider</h3>
 This is a component which wraps your app to provide the modal functionality.
 
 *Basic Usage*
@@ -170,7 +176,7 @@ const App: React.FC = () => {
 }
 ```
 
-<h3 id="useModal">`useModal`</h3>
+<h3 id="useModal">useModal</h3>
 This hook allows you to show a modal component.
 
 *Basic Usage*
@@ -237,11 +243,12 @@ const welcome = async () => {
 
 ```
 
-<h1 id="contributing">Contributing</h1>
+<h2 id="contributing">Contributing</h2>
 Any contributions, feature suggestions, or bug reports are welcome.
 
 
 The development of this package has mostly been motivated by my own project requirements and use cases. If there is a feature that you would like to see to support your own use cases, please open an <a href="https://github.com/alexn400/async-modals/issues">Issue</a> or a <a href="https://github.com/alexn400/async-modals/pulls">Pull Request</a>.
-## License
+
+<h2 id="license">License</h2>
 
 MIT Licensed. Copyright (c) Alexander Nicholson 2021.

@@ -1,5 +1,5 @@
 # Async-Modals Examples
-This is a collection of examples to show off various use cases. Each example has both javascript (.jsx) and typescript (.tsx) versions
+This is a collection of examples to show off various use cases.
 
 ## List of Examples:
-* Reusable confirmation dialog hook 
+Nothing yet 😔
