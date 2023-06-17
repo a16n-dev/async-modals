@@ -1,3 +1,7 @@
+Precursor to `react-dialog-async` - see [here](https://github.com/alexn400/react-dialog-async) for the new version of this library
+
+---
+
 [![npm](https://img.shields.io/npm/v/async-modals)](https://www.npmjs.com/package/async-modals)
 [![Types](https://img.shields.io/npm/types/async-modals.svg)](https://www.npmjs.com/package/async-modals)
 [![Downloads](https://img.shields.io/npm/dt/async-modals.svg)](https://www.npmjs.com/package/async-modals)
